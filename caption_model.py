@@ -2,6 +2,7 @@
 # define the punctuation-removal function
 import re, string
 from math import log10
+import numpy as np
 
 # this creates a regular expression that identifies all punctuation character
 # don't include this in `strip_punc`, otherwise you will re-compile this expression
@@ -39,21 +40,19 @@ from collections import Counter
 def reduce_captions(captions, glove, stops=[]):
     """Takes a list of strings, representing captions
     Returns a list of shape (50,) ndarrays"""
-    sequences = [tokenize(strip_punc(caption.lower())) for caption in captions]
-    for sequence in sequences:
+    sequences = {Id: tokenize(strip_punc(caption.lower())) for Id, caption in captions.items()}
+    for sequence in sequences.values():
         for i in range(len(sequence)-1, -1, -1):
             if sequence[i] in stops:
                 del sequence[i]
-    counters = [Counter(sequence) for sequence in sequences]
+    counters = [Counter(sequence) for sequence in sequences.values()]
     
-    out = []
-    for sequence in sequences:
+    out = {}
+    for Id, sequence in sequences.items():
         seq = []
         for word in sequence:
             if word in glove.vocab:
                 seq.append(glove[word]*log10(len(counters) / sum(word in counter for counter in counters)))
-        out.append(np.mean(seq, axis=0))
+        out[Id] = np.mean(seq, axis=0)
     
     return out
-
-import numpy as np
