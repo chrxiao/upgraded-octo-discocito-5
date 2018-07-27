@@ -1,15 +1,16 @@
 from sklearn.metrics.pairwise import cosine_similarity
 
-def search_database(query_vec, id_to_semantic_database, k):
+def search_database(query_vec, image_id_to_semantic_database, k):
     """ Given a shape (50,) representative vector for a query, return
     the top k image ids of images matching the query.
     
         Parameters
         ----------
         query_vec : nd.array
+            normalized semantic features of a query
             
-        id_to_semantic_database : dictionary
-            maps image ids to semantic features
+        image_id_to_semantic_database : dictionary
+            maps image ids to normalized semantic features
             
         k : scalar
             determines how many of the top image ids should be returned 
@@ -22,7 +23,7 @@ def search_database(query_vec, id_to_semantic_database, k):
     top_k_cos_sim = np.zeros(k)
     top_k_id = np.zeros(k)
     
-    for id, semantic in id_to_semantic_database.items():
+    for id, semantic in image_id_to_semantic_database.items():
         cos_sim = cosine_similarity(query_vec.reshape(1, -1), semantic.reshape(1, -1))[0][0]
         if cos_sim > np.min(top_k_cos_sim):
             new_i = np.argmin(top_k_cos_sim)
