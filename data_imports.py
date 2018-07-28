@@ -1,6 +1,7 @@
 import json
 import time
 from gensim.models.keyedvectors import KeyedVectors
+from pickle import load
 
 def load_json(path="data/captions_train2014.json"):
     with open(path) as json_data:
@@ -20,3 +21,7 @@ def load_stopwords(path="data/stopwords.txt"):
         for line in r:
             stops += [i.strip() for i in line.split('\t')]
     return stops
+
+def load_resnet(path='data/resnet18_features_train.pkl'):
+    data = load(open(path, 'rb'))
+    return data
