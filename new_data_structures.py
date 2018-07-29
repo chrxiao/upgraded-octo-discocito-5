@@ -62,7 +62,7 @@ def create_caption_id_to_string(capt_dict, resnet_dict):
     out: dictionary that maps caption id to the string
     """
     
-    out = {entry["id"]:entry["caption"] for entry in capt_dict if entry["id"] in resnet_dict}
+    out = {entry["id"]:entry["caption"] for entry in capt_dict if entry["image_id"] in resnet_dict}
     
     return out
 
